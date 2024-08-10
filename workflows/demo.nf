@@ -16,6 +16,18 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_demo
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+process ECHO_READS {
+
+    debug true
+
+    input:
+    tuple val(meta), path(reads)
+
+    script:
+    """
+    echo ${reads}
+    """
+}
 
 workflow DEMO {
 
@@ -26,10 +38,16 @@ workflow DEMO {
 
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
-
+    //
+    // MODULE: Echo reads
+    //
+    ECHO_READS (
+        ch_samplesheet
+    )
     //
     // MODULE: Run FastQC
     //
+
     FASTQC (
         ch_samplesheet
     )
